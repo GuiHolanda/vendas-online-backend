@@ -12,7 +12,7 @@ export class AddressEntity {
   id: number;
 
   @Column({ name: 'user_id', nullable: false })
-  userId: string;
+  userId: number;
 
   @Column({ name: 'complement', nullable: true })
   complement: string;
@@ -21,7 +21,7 @@ export class AddressEntity {
   addressNumber: number;
 
   @Column({ name: 'cep', nullable: false })
-  cep: number;
+  cep: string;
 
   @Column({ name: 'city_id', nullable: false })
   cityId: number;

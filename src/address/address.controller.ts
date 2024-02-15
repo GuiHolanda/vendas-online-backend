@@ -8,7 +8,10 @@ import {
 } from '@nestjs/common';
 import { CreateAddressDTO } from './dtos/createAddress.dto';
 import { AddressService } from './address.service';
+import { UserType } from 'src/user/enum/user-type.enum';
+import { Roles } from 'decorators/role.decorator';
 
+@Roles(UserType.User)
 @Controller('address')
 export class AddressController {
   constructor(private readonly addressService: AddressService) {}

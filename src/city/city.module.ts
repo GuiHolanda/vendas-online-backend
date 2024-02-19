@@ -4,7 +4,7 @@ import { CityService } from './city.service';
 import { CityEntity } from './entities/city.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule as CacheModuleNest } from '@nestjs/cache-manager';
-import { CacheModule } from 'src/cache/cache.module';
+import { CacheModule } from '../cache/cache.module';
 
 @Module({
   imports: [

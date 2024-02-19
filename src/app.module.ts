@@ -8,7 +8,7 @@ import { AddressModule } from './address/address.module';
 import { CacheModule } from './cache/cache.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from 'guards/roles.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({

@@ -17,7 +17,7 @@ export class ProductEntity {
   @Column({ name: 'name', nullable: false })
   name: string;
 
-  @Column({ name: 'caregory_id', nullable: false })
+  @Column({ name: 'category_id', nullable: false })
   categoryId: number;
 
   @Column({ name: 'price', nullable: false })
@@ -36,6 +36,6 @@ export class ProductEntity {
     () => CategoryEntity,
     (category: CategoryEntity) => category.products,
   )
-  @JoinColumn({ name: 'caregory_id', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
   category?: CategoryEntity;
 }

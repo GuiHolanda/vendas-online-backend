@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartEntity } from './entities/cart.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { InsertCartDTO } from './dtos/insert-cart.dto';
 import { CartProductService } from 'src/cart-product/cart-product.service';
+import { LINES_AFFECTED } from 'src/constants';
 
 @Injectable()
 export class CartService {
@@ -28,7 +29,7 @@ export class CartService {
 
     if (!cart) {
       throw new NotFoundException(
-        `No active cart were found with the id: ${userId}`,
+        `No active cart were found for the user with the id: ${userId}`,
       );
     }
 
@@ -52,6 +53,20 @@ export class CartService {
 
     await this.cartProductService.insertProductInCart(insertCart, cart);
 
-    return this.getCartByUserId(userId, true);
+    return cart;
+  }
+
+  async clearCart(userId: number): Promise<DeleteResult> {
+    const cart = await this.getCartByUserId(userId);
+
+    this.cartRepository.save({
+      ...cart,
+      active: false,
+    });
+
+    return {
+      raw: [],
+      affected: LINES_AFFECTED,
+    };
   }
 }

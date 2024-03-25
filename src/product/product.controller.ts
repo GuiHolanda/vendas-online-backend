@@ -9,8 +9,8 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Roles } from 'src/decorators/role.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
+import { Roles } from '../decorators/role.decorator';
+import { UserType } from '../user/enum/user-type.enum';
 import { ReturnProductDTO } from './dtos/return-product.dto';
 import { ProductService } from './product.service';
 import { CreateProductDTO } from './dtos/create-product.dto';

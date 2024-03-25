@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { ReturnCategory } from './dtos/return-category.dto';
 import { CategoryService } from './category.service';
-import { Roles } from 'src/decorators/role.decorator';
-import { UserType } from 'src/user/enum/user-type.enum';
+import { Roles } from '../decorators/role.decorator';
+import { UserType } from '../user/enum/user-type.enum';
 import { CreateCategory } from './dtos/create-category.dto';
 
 @Roles(UserType.User, UserType.Admin)

@@ -30,14 +30,14 @@ export class UserController {
   @Roles(UserType.Admin)
   @Get()
   async getAllUsers(): Promise<ReturnUserDTO[]> {
-    return (await this.userService.getAllUser()).map(
+    return (await this.userService.getAllUsers()).map(
       (userEntity) => new ReturnUserDTO(userEntity),
     );
   }
 
   @Roles(UserType.Admin)
   @Get('/:userId')
-  async getUserBtId(@Param('userId') userId: number): Promise<ReturnUserDTO> {
+  async getUserById(@Param('userId') userId: number): Promise<ReturnUserDTO> {
     const user = await this.userService.getUserWithRelations(userId);
     return new ReturnUserDTO(user);
   }

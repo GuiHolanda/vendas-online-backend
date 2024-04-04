@@ -6,7 +6,7 @@ import { StateService } from './state.service';
 export class StateController {
   constructor(private readonly stateService: StateService) {}
   @Get()
-  async getAllUsers(): Promise<StateEntity[]> {
+  async getAllState(): Promise<StateEntity[]> {
     return this.stateService.getAllState();
   }
 }

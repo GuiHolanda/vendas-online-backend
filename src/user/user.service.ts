@@ -49,7 +49,7 @@ export class UserService {
     });
   }
 
-  async getAllUser(): Promise<UserEntity[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     return this.userRepository.find();
   }
 

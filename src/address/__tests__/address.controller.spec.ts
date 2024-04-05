@@ -46,6 +46,7 @@ describe('AddressController', () => {
 
     expect(address).toEqual([
       {
+        id: addressMock.id,
         complement: addressMock.complement,
         addressNumber: addressMock.addressNumber,
         cep: addressMock.cep,

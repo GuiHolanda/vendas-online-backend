@@ -14,12 +14,24 @@ export class ProductService {
     private readonly categoryService: CategoryService,
   ) {}
 
-  async findAll(productIdList?: number[]): Promise<ProductEntity[]> {
+  async findAll(
+    productIdList?: number[],
+    withRelations?: boolean,
+  ): Promise<ProductEntity[]> {
     let findOptions = {};
 
     if (productIdList && productIdList.length > 0) {
       findOptions = {
         where: { id: In(productIdList) },
+      };
+    }
+
+    if (withRelations) {
+      findOptions = {
+        ...findOptions,
+        relations: {
+          category: true,
+        },
       };
     }
     const products = await this.productRepository.find(findOptions);

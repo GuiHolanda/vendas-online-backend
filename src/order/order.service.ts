@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderEntity } from './entities/order.entity';
+import { CartService } from '../cart/cart.service';
+import { CartEntity } from '../cart/entities/cart.entity';
+import { OrderProductEntity } from '../order-product/entities/order-product.entity';
+import { OrderProductService } from '../order-product/order-product.service';
+import { PaymentEntity } from '../payment/entities/payment.entity';
+import { PaymentService } from '../payment/payment.service';
+import { ProductEntity } from '../product/entities/product.entity';
+import { ProductService } from '../product/product.service';
 import { Repository } from 'typeorm';
 import { CreateOrderDTO } from './dtos/create-order.dto';
-import { PaymentService } from '../payment/payment.service';
-import { CartService } from '../cart/cart.service';
-import { OrderProductService } from '../order-product/order-product.service';
-import { ProductService } from '../product/product.service';
-import { PaymentEntity } from '../payment/entities/payment.entity';
-import { ProductEntity } from '../product/entities/product.entity';
-import { OrderProductEntity } from '../order-product/entities/order-product.entity';
-import { CartEntity } from '../cart/entities/cart.entity';
+import { OrderEntity } from './entities/order.entity';
 
 @Injectable()
 export class OrderService {
@@ -59,11 +59,11 @@ export class OrderService {
     userId: number,
   ): Promise<OrderEntity> {
     const cart = await this.cartService.getCartByUserId(userId, true);
-
     const products = await this.productService.findAll(
-      cart.cartProduct.map((cartProduct) => cartProduct.productId),
+      cart.cartProduct?.map((cartProduct) => cartProduct.productId),
     );
-    const payment = await this.paymentService.createPayment(
+
+    const payment: PaymentEntity = await this.paymentService.createPayment(
       createOrderDTO,
       products,
       cart,
@@ -78,24 +78,66 @@ export class OrderService {
     return order;
   }
 
-  async getAllOrdersByUserId(userId: number): Promise<OrderEntity[]> {
+  async findOrdersByUserId(
+    userId?: number,
+    orderId?: number,
+  ): Promise<OrderEntity[]> {
     const orders = await this.orderRepository.find({
-      where: { userId },
+      where: {
+        userId,
+        id: orderId,
+      },
       relations: {
-        address: true,
+        address: {
+          city: {
+            state: true,
+          },
+        },
         ordersProduct: {
           product: true,
         },
         payment: {
           paymentStatus: true,
         },
+        user: !!orderId,
       },
     });
 
     if (!orders || orders.length === 0) {
-      throw new NotFoundException('No orders were found for the current user');
+      throw new NotFoundException('Orders not found');
     }
 
     return orders;
+  }
+
+  async findAllOrders(): Promise<OrderEntity[]> {
+    const orders = await this.orderRepository.find({
+      relations: {
+        user: true,
+      },
+    });
+
+    if (!orders || orders.length === 0) {
+      throw new NotFoundException('Orders not found');
+    }
+
+    const ordersProduct =
+      await this.orderProductService.findAmountProductsByOrderId(
+        orders.map((order) => order.id),
+      );
+
+    return orders.map((order) => {
+      const orderProduct = ordersProduct.find(
+        (currentOrder) => currentOrder.order_id === order.id,
+      );
+
+      if (orderProduct) {
+        return {
+          ...order,
+          amountProducts: Number(orderProduct.total),
+        };
+      }
+      return order;
+    });
   }
 }

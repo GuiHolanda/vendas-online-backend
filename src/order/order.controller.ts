@@ -15,6 +15,7 @@ import { OrderEntity } from './entities/order.entity';
 import { OrderService } from './order.service';
 import { Response } from 'express';
 import { Roles } from '../decorators/role.decorator';
+import { ReturnOrderDTO } from './dtos/return-order.dto';
 
 @Roles(UserType.Admin, UserType.Root, UserType.User)
 @Controller('order')
@@ -47,13 +48,13 @@ export class OrderController {
     return;
   }
 
-  // @Roles(UserType.Admin, UserType.Root)
-  // @Get('/all')
-  // async findAllOrders(): Promise<ReturnOrderDTO[]> {
-  //   return (await this.orderService.findAllOrders()).map(
-  //     (order) => new ReturnOrderDTO(order),
-  //   );
-  // }
+  @Roles(UserType.Admin, UserType.Root)
+  @Get('/all')
+  async findAllOrders(): Promise<ReturnOrderDTO[]> {
+    return (await this.orderService.findAllOrders()).map(
+      (order) => new ReturnOrderDTO(order),
+    );
+  }
 
   // @Roles(UserType.Admin, UserType.Root)
   // @Get('/:orderId')
